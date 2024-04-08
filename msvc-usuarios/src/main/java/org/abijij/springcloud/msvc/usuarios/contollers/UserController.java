@@ -17,6 +17,7 @@ public class UserController {
 
     @GetMapping("/findAllUser")
     public List<Usuario> findAll(){
+
         return  service.findAll();
     }
 
@@ -55,7 +56,7 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/delteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         Optional<Usuario> o = service.findById(id);
         if (o.isPresent()){

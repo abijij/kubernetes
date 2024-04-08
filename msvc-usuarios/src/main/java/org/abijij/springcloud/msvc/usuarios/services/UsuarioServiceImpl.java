@@ -18,18 +18,21 @@ public class UsuarioServiceImpl implements  UsuarioService{
     @Override
     @Transactional(readOnly = true)
     public List<Usuario> findAll() {
+
         return (List<Usuario>) repository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Usuario> findById(Long id) {
+
         return  repository.findById(id);
     }
 
     @Override
     @Transactional
     public Usuario save(Usuario usuario) {
+
         return repository.save(usuario);
     }
 
