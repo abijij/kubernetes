@@ -1,13 +1,17 @@
 package org.abijij.springcloud.msvc.usuarios.contollers;
+import jakarta.validation.Valid;
 import org.abijij.springcloud.msvc.usuarios.models.entity.Usuario;
 import org.abijij.springcloud.msvc.usuarios.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.DocFlavor;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -30,19 +34,20 @@ public class UserController {
             return ResponseEntity.notFound().build();
     }
 
-//    @PostMapping("/CreateUser")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public Usuario create(@RequestBody  Usuario usuario){
-//        return service.save(usuario);
-//    }
 
     @PostMapping("/CreateUser")
-    public ResponseEntity<?> create(@RequestBody  Usuario usuario){
+    public ResponseEntity<?> create(@Valid @RequestBody  Usuario usuario, BindingResult result){
+        if (result.hasErrors()){
+            return validate(result);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(usuario));
     }
 
     @PutMapping("/UpdateById/{id}")
-    public ResponseEntity<?> update(@RequestBody Usuario usuario, @PathVariable Long id){
+    public ResponseEntity<?> update(@Valid @RequestBody Usuario usuario, BindingResult result, @PathVariable Long id){
+        if (result.hasErrors()){
+            return validate(result);
+        }
         Optional<Usuario> o = service.findById(id);
         if (o.isPresent()){
             Usuario usuarioDb = o.get();
@@ -64,6 +69,14 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return  ResponseEntity.notFound().build();
+    }
+
+    private static ResponseEntity<Map<String, String>> validate(BindingResult result) {
+        Map<String, String> errors = new HashMap<>();
+        result.getFieldErrors().forEach(err -> {
+            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errors);
     }
 
 

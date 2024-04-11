@@ -5,9 +5,12 @@ import org.abijij.springcloud.msvc.productos.services.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,15 +34,20 @@ public class ProductController {
     }
 
     @PostMapping("/createProduct")
-    public ResponseEntity<?> create(@RequestBody Producto producto){
+    public ResponseEntity<?> create(@RequestBody Producto producto, BindingResult result){
+        if (result.hasErrors()){
+            return validate(result);
+        }
         Producto productDb = service.save(producto);
         return ResponseEntity.status(HttpStatus.CREATED).body(productDb);
     }
 
     @PutMapping("/updateProduct/{id}")
-    public ResponseEntity<?> update(@RequestBody Producto product, @PathVariable Long id){
+    public ResponseEntity<?> update(@RequestBody Producto product, BindingResult result, @PathVariable Long id){
+        if (result.hasErrors()){
+            return validate(result);
+        }
         Optional<Producto> p = service.findById(id);
-
         if (p.isPresent()){
             Producto productDb = p.get();
             productDb.setNombre(product.getNombre());
@@ -63,5 +71,13 @@ public class ProductController {
            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private static ResponseEntity<Map<String, String>> validate(BindingResult result) {
+        Map<String, String> errors = new HashMap<>();
+        result.getFieldErrors().forEach(err -> {
+            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errors);
     }
 }

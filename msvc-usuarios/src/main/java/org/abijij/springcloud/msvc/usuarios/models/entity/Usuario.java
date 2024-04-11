@@ -1,6 +1,9 @@
 package org.abijij.springcloud.msvc.usuarios.models.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "usurarios")
@@ -10,16 +13,22 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty(message = "El campo 'nombre' no puede ir vacio")
     private String nombre;
 
+    @NotEmpty(message = "El campo 'apellido' no puede ir vacio")
     private String apellido;
 
+    @NotEmpty(message = "El campo 'email' no puede ir vacio")
+    @Email
     @Column(unique = true)
     private String email;
 
+    @NotNull(message = "El campo 'telefono' no puede ir vacio")
     @Column(unique = true)
     private Long telefono;
 
+    @NotEmpty(message = "El campo 'password' no puede ir vacio")
     private String password;
 
 

@@ -1,6 +1,8 @@
 package org.abijij.springcloud.msvc.productos.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "productos")
@@ -10,15 +12,20 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty(message = "El campo 'nombre' no puede ir vacio")
     @Column(unique = true)
     private String nombre;
 
+    @NotEmpty(message = "El campo 'descripcion' no puede ir vacio")
     private String descripcion;
 
+    @NotEmpty(message = "El campo 'departamento' no puede ir vacio")
     private String departamento;
 
+    @NotNull(message = "El campo 'stock' no puede ir vacio")
     private Integer stock;
 
+    @NotNull(message = "El campo 'price' no puede ir vacio")
     private Integer price;
 
 
