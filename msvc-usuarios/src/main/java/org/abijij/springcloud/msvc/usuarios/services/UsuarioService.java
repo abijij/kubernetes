@@ -14,6 +14,8 @@ public interface UsuarioService {
 
     Optional<Usuario> findByEmail(String Email);
 
+    boolean existsByEmail(String email);
+
 
 
 }
