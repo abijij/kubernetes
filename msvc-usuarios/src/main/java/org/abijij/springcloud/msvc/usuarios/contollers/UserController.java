@@ -34,7 +34,7 @@ public class UserController {
 
     @PostMapping("/CreateUser")
     public ResponseEntity<?> create(@Valid @RequestBody  Usuario usuario, BindingResult result){
-        if (service.findByEmail(usuario.getEmail()).isPresent()){
+        if (!usuario.getEmail().isEmpty() &&  service.findByEmail(usuario.getEmail()).isPresent()){
             return ResponseEntity.badRequest().body(Collections
                     .singletonMap("mensaje", "Existe ya un usuario registrado con ese correo"));
         }
@@ -52,7 +52,9 @@ public class UserController {
         Optional<Usuario> o = service.findById(id);
         if (o.isPresent()){
             Usuario usuarioDb = o.get();
-            if (!usuario.getEmail().equalsIgnoreCase(usuarioDb.getEmail()) && service.findByEmail(usuario.getEmail()).isPresent()){
+            if (!usuario.getEmail().isEmpty() &&
+                    !usuario.getEmail().equalsIgnoreCase(usuarioDb.getEmail()) &&
+                    service.findByEmail(usuario.getEmail()).isPresent()){
                 return ResponseEntity.badRequest()
                         .body(Collections
                         .singletonMap("mensaje", "Existe ya un usuario registrado con ese correo"));

@@ -32,7 +32,7 @@ public class ProductController {
 
     @PostMapping("/createProduct")
     public ResponseEntity<?> create(@RequestBody Producto producto, BindingResult result){
-        if (service.findByNombre(producto.getNombre()).isPresent()){
+        if (!producto.getNombre().isEmpty() && service.findByNombre(producto.getNombre()).isPresent()){
             return ResponseEntity.badRequest().body(Collections
                     .singletonMap("mensaje", "Existe ya un producto registrado con ese nombre"));
         }
@@ -51,7 +51,9 @@ public class ProductController {
         Optional<Producto> p = service.findById(id);
         if (p.isPresent()){
             Producto productDb = p.get();
-            if (!product.getNombre().equalsIgnoreCase(productDb.getNombre()) && service.findByNombre(product.getNombre()).isPresent()){
+            if (!product.getNombre().isEmpty() &&
+                    !product.getNombre().equalsIgnoreCase(productDb.getNombre()) &&
+                    service.findByNombre(product.getNombre()).isPresent()){
                 return ResponseEntity.badRequest()
                         .body(Collections
                                 .singletonMap("mensaje", "Existe ya un producto registrado con ese nombre"));
