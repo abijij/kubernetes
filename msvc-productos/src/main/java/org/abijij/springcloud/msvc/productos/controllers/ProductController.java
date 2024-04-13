@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class ProductController {
@@ -35,6 +32,10 @@ public class ProductController {
 
     @PostMapping("/createProduct")
     public ResponseEntity<?> create(@RequestBody Producto producto, BindingResult result){
+        if (service.findByNombre(producto.getNombre()).isPresent()){
+            return ResponseEntity.badRequest().body(Collections
+                    .singletonMap("mensaje", "Existe ya un producto registrado con ese nombre"));
+        }
         if (result.hasErrors()){
             return validate(result);
         }
@@ -50,6 +51,11 @@ public class ProductController {
         Optional<Producto> p = service.findById(id);
         if (p.isPresent()){
             Producto productDb = p.get();
+            if (!product.getNombre().equalsIgnoreCase(productDb.getNombre()) && service.findByNombre(product.getNombre()).isPresent()){
+                return ResponseEntity.badRequest()
+                        .body(Collections
+                                .singletonMap("mensaje", "Existe ya un producto registrado con ese nombre"));
+            }
             productDb.setNombre(product.getNombre());
             productDb.setDescripcion(product.getDescripcion());
             productDb.setDepartamento(product.getDepartamento());

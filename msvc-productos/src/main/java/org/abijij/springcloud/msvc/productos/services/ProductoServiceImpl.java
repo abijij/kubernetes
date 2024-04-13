@@ -38,4 +38,9 @@ public class ProductoServiceImpl implements ProductoService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public Optional<Producto> findByNombre(String nombre) {
+        return repository.findByNombre(nombre);
+    }
 }
