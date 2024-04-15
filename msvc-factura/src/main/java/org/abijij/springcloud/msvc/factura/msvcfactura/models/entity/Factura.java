@@ -3,8 +3,10 @@ package org.abijij.springcloud.msvc.factura.msvcfactura.models.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import org.abijij.springcloud.msvc.factura.msvcfactura.models.Producto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,9 +33,12 @@ public class Factura {
     @Column( nullable = false)
     private String payment_methods;
 
-    @NotNull
-    @Column(nullable = false)
-    private List<Long> productosIds;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "productos_id")
+    private List<FacturaProducto> facturaProductos;
+
+    @Transient
+    private List<Producto> productos;
 
     @NotEmpty
     @Column( nullable = false)
@@ -42,6 +47,36 @@ public class Factura {
     @NotEmpty
     @Column( nullable = false)
     private String address;
+
+
+    public Factura() {
+        facturaProductos = new ArrayList<>();
+        productos = new ArrayList<>();
+    }
+
+    public List<FacturaProducto> getFacturaProductos() {
+        return facturaProductos;
+    }
+
+    public void setFacturaProductos(List<FacturaProducto> facturaProductos) {
+        this.facturaProductos = facturaProductos;
+    }
+
+    public void addFacturaProducto(FacturaProducto facturaUsuarioProducto){
+        facturaProductos.add(facturaUsuarioProducto);
+    }
+
+    public void removeFacturaProducto(FacturaProducto facturaUsuarioProducto){
+        facturaProductos.remove(facturaUsuarioProducto);
+    }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
 
     public Long getId() {
         return id;
@@ -81,14 +116,6 @@ public class Factura {
 
     public void setPayment_methods(String payment_methods) {
         this.payment_methods = payment_methods;
-    }
-
-    public List<Long> getProductosIds() {
-        return productosIds;
-    }
-
-    public void setProductosIds(List<Long> productosIds) {
-        this.productosIds = productosIds;
     }
 
     public String getTotal() {

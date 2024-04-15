@@ -1,5 +1,6 @@
 package org.abijij.springcloud.msvc.factura.msvcfactura.services;
 
+import org.abijij.springcloud.msvc.factura.msvcfactura.models.Producto;
 import org.abijij.springcloud.msvc.factura.msvcfactura.models.entity.Factura;
 import org.abijij.springcloud.msvc.factura.msvcfactura.repositories.FacturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +38,20 @@ public class FacturaServiceImpl implements  FacturaService{
     @Transactional
     public void delete(Long id) {
             repository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Producto> asignarProducto(Producto producto, Long productoId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Producto> crearProducto(Producto producto, Long productoId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Producto> eliminarProducto(Producto producto, Long productoId) {
+        return Optional.empty();
     }
 }

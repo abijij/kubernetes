@@ -57,7 +57,7 @@ public class FacturaController {
             facturaDb.setUpdatedAt(LocalDateTime.now());
             facturaDb.setUsuarioId(factura.getUsuarioId());
             facturaDb.setPayment_methods(facturaDb.getPayment_methods());
-            facturaDb.setProductosIds(facturaDb.getProductosIds());
+            facturaDb.setFacturaProductos(facturaDb.getFacturaProductos());
             facturaDb.setTotal(factura.getTotal());
             facturaDb.setAddress(factura.getAddress());
             return  ResponseEntity.status(HttpStatus.CREATED).body(service.save(facturaDb));
